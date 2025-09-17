@@ -2,7 +2,26 @@ import numpy as np
 import pandas as pd
 from itertools import permutations
 from scipy.stats import norm
+import statsmodels.api as sm
 
+
+"""
+    Simple helpers:
+"""
+def compute_all_three_logistic_models(x_data, y_data):
+    """
+        given (x_data, y_data), returns the logit, probit, and cloglog models given the fit
+            without an intercept.
+    """
+    temp_logit_model = sm.Logit(endog=y_data, exog=x_data).fit(disp=0)
+    temp_probit_model = sm.GLM(
+        y_data, x_data, family=sm.families.Binomial(link=sm.families.links.Probit())
+    ).fit()
+    temp_cloglog_model = sm.GLM(
+        y_data, x_data, family=sm.families.Binomial(link=sm.families.links.CLogLog())
+    ).fit()
+    return [temp_logit_model, temp_probit_model, temp_cloglog_model]
+    
 """
     Simple helper for binomial data:
 """
