@@ -98,7 +98,7 @@ def compute_sum_G_i(
     link_fn: str = "Logit",
 ) -> pd.Series:
     """
-    Here we assume x is 2d.
+        Here we assume x is 2d. To see the derivations of dmu_dg, see ddc_utils.md
     """
 
     if link_fn == "Logit":
