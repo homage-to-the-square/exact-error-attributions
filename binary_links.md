@@ -1,3 +1,7 @@
+## Link_Function_For_Binary_Response class:
+
+Here, I briefly note the computational derivations for the observed Fisher Information, and its derivative with respect to beta.
+
 For an individual data-point, for a binary GLM, we observe that for the quantile function $h$ (i.e., the inverse link function), the likelihood of a datapoint (given $\beta$, $x$, $y$) is simply:
 
 $$
