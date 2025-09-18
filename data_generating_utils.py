@@ -24,16 +24,16 @@ def generate_population_data(
     )
 
     if true_beta != 0:
-        beta_times_x = true_beta * population_x
+        eta = true_beta * population_x
         if link == "Logit":
-            population_y = rand_generator.binomial(n=1, p=expit(beta_times_x)).flatten()
+            population_y = rand_generator.binomial(n=1, p=expit(eta)).flatten()
         elif link == "Probit":
             population_y = rand_generator.binomial(
-                n=1, p=norm.cdf(beta_times_x)
+                n=1, p=norm.cdf(eta)
             ).flatten()
         elif link == "CLogLog":
             population_y = rand_generator.binomial(
-                n=1, p=(1 - np.exp(-np.exp(beta_times_x)))
+                n=1, p=(1 - np.exp(-np.exp(eta)))
             ).flatten()
         else:
             return pd.DataFrame()
