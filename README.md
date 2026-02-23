@@ -4,7 +4,8 @@ This repository contains all the code used to generate the figures in *...*.
 
 ## Util Files
 - `binary_links.py` contains a class that implements the derivatives of the inverse link (quantile) functions as well as the that of the observed Fisher Information.
-- 'data_generating_utils.py' contains the function which generates the data for all the simulations.
+  - A few notes about the class is also contained in the associated .md file of the same name.
+- `data_generating_utils.py' contains the function which generates the data for all the simulations.
 - `ddc_utils.py` contains the primary util file, containing helpers for all the computation used to compute the data defect correlation, realized efficiency, etc...
 
 ## Figures 
