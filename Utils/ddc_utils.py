@@ -8,6 +8,8 @@ from typing import Union
 """
     Simple helpers, for 4.2:
 """
+CONST_ERR = 1e-5
+
 def compute_all_three_logistic_models(x_data, y_data):
     """
         given (x_data, y_data), returns the logit, probit, and cloglog models given the fit
@@ -22,14 +24,14 @@ def compute_all_three_logistic_models(x_data, y_data):
     ).fit()
     return [temp_logit_model, temp_probit_model, temp_cloglog_model]
 
-def get_pop_gs_for_binary_y(population_models, pop_x, pop_y, population_size) -> dict:
+def get_pop_gs_for_binary_y(population_models, pop_x, pop_y) -> dict:
     pop_gs = {}
     pop_logit_model, pop_probit_model, pop_cloglog_model = population_models
     
     # compute logit gs:
     pop_gs["Logit"] = pop_x * (
-        np.array(pop_y).reshape((population_size, 1))
-        - np.array(pop_logit_model.predict()).reshape((population_size, 1))
+        np.array(pop_y).reshape((len(pop_y), 1))
+        - np.array(pop_logit_model.predict()).reshape((len(pop_y), 1))
     )
 
     # compute probit gs:
@@ -39,7 +41,7 @@ def get_pop_gs_for_binary_y(population_models, pop_x, pop_y, population_size) ->
     pop_gs['Probit'] = pop_x.mul(((pop_y - temp_mu_is) * variance_denominator * dmu_dg), axis=0)
     
     # compute cloglog gs:
-    temp_mu_is = pop_cloglog_model.predict()
+    temp_mu_is = np.clip(pop_cloglog_model.predict(), a_min = CONST_ERR, a_max = 1 - CONST_ERR)
     variance_denominator = 1/((temp_mu_is) * (1 - temp_mu_is))
     dmu_dg = np.log(1 - temp_mu_is) * (temp_mu_is - 1)
     pop_gs['CLogLog'] = pop_x.mul(((pop_y - temp_mu_is) * variance_denominator * dmu_dg), axis=0)
@@ -86,7 +88,7 @@ def compute_mu_i(X: np.array, beta: np.array, link_fn: str = 'Logit'):
     elif link_fn == 'Probit':
         return norm.cdf(eta)
     elif link_fn == 'CLogLog':
-        return 1 - np.exp(-np.exp(eta))
+        return np.clip(1 - np.exp(-np.exp(eta)), a_min = CONST_ERR, a_max = 1 - CONST_ERR)
     else:
         return None
 

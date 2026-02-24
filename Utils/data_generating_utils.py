@@ -7,9 +7,7 @@ from scipy.stats import norm
 # generate population data:
 def generate_population_data(
     population_size,
-    number_of_coefficients,
     rand_generator,
-    feature_cols,
     true_beta=0,
     link="Logit",
 ):
@@ -18,8 +16,8 @@ def generate_population_data(
 
     """
     population_x = rand_generator.multivariate_normal(
-        mean=np.zeros(number_of_coefficients),
-        cov=np.eye(number_of_coefficients),
+        mean=np.zeros(1),
+        cov=np.eye(1),
         size=population_size,
     )
 
@@ -44,6 +42,6 @@ def generate_population_data(
         [pd.Series(population_y), pd.DataFrame(population_x)], axis=1
     )
 
-    population_data.columns = ["y"] + feature_cols
+    population_data.columns = ["y", "x_0"]
 
     return population_data
